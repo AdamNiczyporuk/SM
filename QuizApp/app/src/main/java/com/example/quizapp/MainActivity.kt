@@ -12,6 +12,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var questionList: List<Question>
     private var currentQuestionIndex = 0
     private var correctAnswersCount = 0
+    private var currentIndex = 0  // Zmienna do przechowywania aktualnego indeksu
+    companion object {
+        const val KEY_CURRENT_INDEX = "currentIndex"  // Stała do klucza
+        const val QUIZ_TAG = "QuizApp"  // Stała do logów
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,5 +110,14 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         Log.d("Lifecycle", "onDestroy called")
+    }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)  // Zapisujemy stan w superklasie
+
+        // Dodajemy informacje o aktualnym indeksie do outState
+        outState.putInt(KEY_CURRENT_INDEX, currentIndex)
+
+        // Logujemy wywołanie metody
+        Log.d(QUIZ_TAG, "Wywołana została metoda: onSaveInstanceState")
     }
 }
