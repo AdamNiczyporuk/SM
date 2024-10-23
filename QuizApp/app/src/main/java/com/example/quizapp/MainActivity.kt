@@ -23,7 +23,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         Log.d("Lifecycle", "onCreate called")
 
-        val questionTextView: TextView = findViewById(R.id.question_Texview)
+        if (savedInstanceState != null) {
+            currentQuestionIndex = savedInstanceState.getInt(KEY_CURRENT_INDEX)
+        }
+
+        val questionTextView: TextView = findViewById(R.id.question_Textview)
         val buttonTrue: Button = findViewById(R.id.button_true)
         val buttonFalse: Button = findViewById(R.id.button_false)
         val buttonNext: Button = findViewById(R.id.button_next)
@@ -38,6 +42,8 @@ class MainActivity : AppCompatActivity() {
         )
 
         displayQuestion(questionTextView)
+
+
 
         // Obsługa kliknięcia przycisku True
         buttonTrue.setOnClickListener {
@@ -58,6 +64,7 @@ class MainActivity : AppCompatActivity() {
                 displayResult()  // Wyświetl wynik na końcu quizu
             }
         }
+
     }
 
     private fun displayQuestion(questionTextView: TextView) {
@@ -79,9 +86,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
-    }
 
     private fun displayResult() {
         val resultMessage = "Koniec Quizu!!Twój wynik: $correctAnswersCount/${questionList.size} poprawnych odpowiedzi"
@@ -112,12 +116,8 @@ class MainActivity : AppCompatActivity() {
         Log.d("Lifecycle", "onDestroy called")
     }
     override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)  // Zapisujemy stan w superklasie
-
-        // Dodajemy informacje o aktualnym indeksie do outState
-        outState.putInt(KEY_CURRENT_INDEX, currentIndex)
-
-        // Logujemy wywołanie metody
+        super.onSaveInstanceState(outState)
+        outState.putInt(KEY_CURRENT_INDEX, currentQuestionIndex)
         Log.d(QUIZ_TAG, "Wywołana została metoda: onSaveInstanceState")
     }
 }
