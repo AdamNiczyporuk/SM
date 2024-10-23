@@ -1,5 +1,6 @@
 package com.example.quizapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -31,7 +32,13 @@ class MainActivity : AppCompatActivity() {
         val buttonTrue: Button = findViewById(R.id.button_true)
         val buttonFalse: Button = findViewById(R.id.button_false)
         val buttonNext: Button = findViewById(R.id.button_next)
+        val buttonHint: Button = findViewById(R.id.button_hint)
 
+        buttonHint.setOnClickListener {
+            val intent = Intent(this, PromptActivity::class.java)
+            intent.putExtra("correctAnswer", questionList[currentQuestionIndex].trueAnswer)
+            startActivity(intent)
+        }
         // Lista pytań
         questionList = listOf(
             Question(R.string.q_activity, true),
