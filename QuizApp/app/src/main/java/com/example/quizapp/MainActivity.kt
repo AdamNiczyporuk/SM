@@ -13,7 +13,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var questionList: List<Question>
     private var currentQuestionIndex = 0
     private var correctAnswersCount = 0
-    private var currentIndex = 0  // Zmienna do przechowywania aktualnego indeksu
+    private var currentIndex = 0
+    private var answerWasShown = false
     companion object {
         const val KEY_CURRENT_INDEX = "currentIndex"
         const val QUIZ_TAG = "QuizApp"
@@ -67,11 +68,12 @@ class MainActivity : AppCompatActivity() {
 
         // Obsługa kliknięcia przycisku Next
         buttonNext.setOnClickListener {
-            currentQuestionIndex++  // Przejdź do następnego pytania
+            currentQuestionIndex++
+            answerWasShown=false
             if (currentQuestionIndex < questionList.size) {
-                displayQuestion(questionTextView)  // Wyświetl nowe pytanie
+                displayQuestion(questionTextView)
             } else {
-                displayResult()  // Wyświetl wynik na końcu quizu
+                displayResult()
             }
         }
 
@@ -85,15 +87,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkAnswer(userAnswer: Boolean) {
-        val currentQuestion = questionList[currentQuestionIndex]
+        val correctAnswer = questionList[currentQuestionIndex].trueAnswer
+        val resultMessageId: Int
 
-        // Sprawdzamy, czy odpowiedź użytkownika jest prawidłowa
-        if (userAnswer == currentQuestion.trueAnswer) {
-            correctAnswersCount++  // Zwiększamy liczbę poprawnych odpowiedzi
-            Toast.makeText(this, "Dobra odpowiedź!", Toast.LENGTH_SHORT).show()
+        if (answerWasShown) {
+            resultMessageId = R.string.answer_was_shown // Dodaj zasób do strings.xml
         } else {
-            Toast.makeText(this, "Zła odpowiedź!", Toast.LENGTH_SHORT).show()
+            resultMessageId = if (userAnswer == correctAnswer) {
+                R.string.correct_answer // Dodaj zasób do strings.xml
+            } else {
+                R.string.incorrect_answer // Dodaj zasób do strings.xml
+            }
         }
+
+        Toast.makeText(this, getString(resultMessageId), Toast.LENGTH_SHORT).show()
     }
 
 
@@ -134,8 +141,8 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == REQUEST_CODE_PROMPT && resultCode == RESULT_OK) {
-            val wasHintShown = data?.getBooleanExtra("hintShown", false) ?: false
-            if (wasHintShown) {
+            answerWasShown = data?.getBooleanExtra("hintShown", false) ?: false
+            if (answerWasShown) {
                 Toast.makeText(this, "Podpowiedź została wyświetlona", Toast.LENGTH_SHORT).show()
             }
         }

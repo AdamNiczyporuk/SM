@@ -12,4 +12,9 @@
 
     <string name="q_question_answer">Do you want to see answer?</string>
     <string name="q_show_question">Show answer</string>
+
+    <string name="answer_was_shown">Odpowiedź była już wyświetlona!</string>
+    <string name="correct_answer">Prawidłowa odpowiedź!</string>
+    <string name="incorrect_answer">Błąd! Nieprawidłowa odpowiedź!</string>
+
 </resources>
