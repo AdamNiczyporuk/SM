@@ -1,5 +1,6 @@
 package com.example.quizapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
@@ -35,6 +36,12 @@ class PromptActivity : AppCompatActivity() {
         showCorrectAnswerButton.setOnClickListener {
             val answer = if (correctAnswer) R.string.button_true else R.string.button_false
             answerTextView.setText(answer)
+
+            // Zwróć informację do MainActivity
+            val resultIntent = Intent()
+            resultIntent.putExtra("hintShown", true)
+            setResult(RESULT_OK, resultIntent)
+            finish()
         }
     }
 }

@@ -15,9 +15,11 @@ class MainActivity : AppCompatActivity() {
     private var correctAnswersCount = 0
     private var currentIndex = 0  // Zmienna do przechowywania aktualnego indeksu
     companion object {
-        const val KEY_CURRENT_INDEX = "currentIndex"  // Stała do klucza
-        const val QUIZ_TAG = "QuizApp"  // Stała do logów
+        const val KEY_CURRENT_INDEX = "currentIndex"
+        const val QUIZ_TAG = "QuizApp"
+        const val REQUEST_CODE_PROMPT = 0  // Dodaj tę stałą
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,8 +39,9 @@ class MainActivity : AppCompatActivity() {
         buttonHint.setOnClickListener {
             val intent = Intent(this, PromptActivity::class.java)
             intent.putExtra("correctAnswer", questionList[currentQuestionIndex].trueAnswer)
-            startActivity(intent)
+            startActivityForResult(intent, REQUEST_CODE_PROMPT)  // Używamy startActivityForResult
         }
+
         // Lista pytań
         questionList = listOf(
             Question(R.string.q_activity, true),
@@ -127,4 +130,15 @@ class MainActivity : AppCompatActivity() {
         outState.putInt(KEY_CURRENT_INDEX, currentQuestionIndex)
         Log.d(QUIZ_TAG, "Wywołana została metoda: onSaveInstanceState")
     }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == REQUEST_CODE_PROMPT && resultCode == RESULT_OK) {
+            val wasHintShown = data?.getBooleanExtra("hintShown", false) ?: false
+            if (wasHintShown) {
+                Toast.makeText(this, "Podpowiedź została wyświetlona", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
 }
