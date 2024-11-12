@@ -31,4 +31,19 @@
         android:text="Light Value: N/A"
         android:textSize="16sp"
         android:paddingBottom="8dp" />
+    <TextView
+        android:id="@+id/sensor_pressure_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pressure: "
+        android:textSize="18sp"
+        android:layout_marginTop="20dp" />
+
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Powrót"
+        android:onClick="onBackPressed" />
+
 </LinearLayout>

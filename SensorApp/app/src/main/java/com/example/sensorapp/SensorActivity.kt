@@ -39,7 +39,7 @@ class SensorActivity : AppCompatActivity() {
             Toast.makeText(this, "Brak dostępnych sensorów", Toast.LENGTH_SHORT).show()
         } else {
             // Inicjalizuj adapter, jeśli sensory są dostępne
-            adapter = SensorAdapter(sensorList, this)  // Przekazujemy `this` jako kontekst
+            adapter = SensorAdapter(sensorList, this)
             recyclerView.adapter = adapter
         }
     }

@@ -1,5 +1,4 @@
 package com.example.sensorapp
-import SensorDetailsActivity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
@@ -30,7 +29,7 @@ class SensorAdapter(
         holder.itemView.setOnClickListener {
             // Tworzenie intencji do przejścia do szczegółów sensora
             val intent = Intent(context, SensorDetailsActivity::class.java)
-            // Przekazanie nazwy sensora i typu sensora jako dodatkowych danych
+// Przekazanie nazwy sensora i typu sensora jako dodatkowych danych
             intent.putExtra("SENSOR_NAME", sensor.name)
             intent.putExtra("SENSOR_TYPE", sensor.type)  // Dodajemy typ sensora
             context.startActivity(intent)
@@ -47,7 +46,7 @@ class SensorAdapter(
 
         fun bind(sensor: Sensor) {
             sensorIcon.setImageResource(R.drawable.ic_sensor)  // Dodaj swoją ikonę tutaj
-            sensorName.text = sensor.name
+            sensorName.text = sensor.name ?: "Unnamed Sensor"
 
             // Ustawienie długiego kliknięcia
             itemView.setOnLongClickListener {

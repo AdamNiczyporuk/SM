@@ -5,4 +5,6 @@
     <string name="missing_sensor">No Sensor</string>
     <string name="light_sensor_label">Light Value: %.2f lx</string>
     <string name="light_sensor_available">Light Sensor is available</string>
+    <string name="pressure_sensor_label">Pressure: %1$.2f hPa</string>
+    <string name="pressure_sensor_available">Light Sensor is available</string>
 </resources>
