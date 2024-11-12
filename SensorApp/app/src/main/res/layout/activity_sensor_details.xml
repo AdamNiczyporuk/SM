@@ -23,27 +23,31 @@
         android:textSize="16sp"
         android:paddingBottom="8dp" />
 
-    <!-- TextView do wyświetlania wartości sensora -->
+    <!-- TextView do wyświetlania wartości sensora światła -->
     <TextView
         android:id="@+id/sensor_light_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Light Value: N/A"
         android:textSize="16sp"
-        android:paddingBottom="8dp" />
+        android:paddingBottom="8dp"
+        android:visibility="gone" /> <!-- Ukryj domyślnie -->
+
+    <!-- TextView do wyświetlania wartości sensora ciśnienia -->
     <TextView
         android:id="@+id/sensor_pressure_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pressure: "
-        android:textSize="18sp"
-        android:layout_marginTop="20dp" />
+        android:text="Pressure Value: N/A"
+        android:textSize="16sp"
+        android:paddingBottom="8dp"
+        android:visibility="gone" /> <!-- Ukryj domyślnie -->
 
+    <!-- Przycisk powrotu -->
     <Button
         android:id="@+id/btnBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Powrót"
         android:onClick="onBackPressed" />
-
 </LinearLayout>

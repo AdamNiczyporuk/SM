@@ -6,6 +6,7 @@ import android.hardware.SensorManager
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +20,7 @@ class SensorActivity : AppCompatActivity() {
     private lateinit var sensorManager: SensorManager
     private lateinit var sensorList: List<Sensor>
     private lateinit var adapter: SensorAdapter
+    private lateinit var sensorCountTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +30,10 @@ class SensorActivity : AppCompatActivity() {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
+        // Znalezienie widoków
         recyclerView = findViewById(R.id.sensor_recycler_view)
+        sensorCountTextView = findViewById(R.id.sensorCountTextView) // Inicjalizujemy TextView
+
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -42,6 +47,9 @@ class SensorActivity : AppCompatActivity() {
             adapter = SensorAdapter(sensorList, this)
             recyclerView.adapter = adapter
         }
+
+        // Ustawienie liczby dostępnych sensorów
+        sensorCountTextView.text = "Available Sensors: ${sensorList.size}"
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -53,7 +61,7 @@ class SensorActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.action_show_sensor_count -> {
                 val sensorCount = sensorList.size
-                val message = getString(R.string.sensors_count, sensorCount)
+                val message = "Sensor Count: $sensorCount"
                 item.title = message  // Zaktualizuj tytuł przycisku na pasku narzędzi
                 return true
             }

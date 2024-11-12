@@ -1,4 +1,5 @@
 package com.example.sensorapp
+
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -16,6 +17,7 @@ class SensorDetailsActivity : AppCompatActivity(), SensorEventListener {
     private var sensorPressure: Sensor? = null
     private lateinit var sensorLightTextView: TextView
     private lateinit var sensorPressureTextView: TextView
+    private lateinit var sensorDetailsTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +26,7 @@ class SensorDetailsActivity : AppCompatActivity(), SensorEventListener {
         // Znalezienie widoku
         sensorLightTextView = findViewById(R.id.sensor_light_label)
         sensorPressureTextView = findViewById(R.id.sensor_pressure_label)
+        sensorDetailsTextView = findViewById(R.id.sensor_details_label)
 
         // Pobranie SensorManager
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
@@ -31,31 +34,58 @@ class SensorDetailsActivity : AppCompatActivity(), SensorEventListener {
         val sensorType = intent.getIntExtra("SENSOR_TYPE", -1)
 
         if (sensorType != -1) {
-            if (sensorLight != null) {
-                sensorLightTextView.text = getString(R.string.light_sensor_available)
-            } else {
-                sensorLightTextView.text = getString(R.string.missing_sensor)
-            }
-
-            if (sensorPressure != null) {
-                sensorPressureTextView.text = getString(R.string.pressure_sensor_available)
-            } else {
-                sensorPressureTextView.text = getString(R.string.missing_sensor)
+            when (sensorType) {
+                Sensor.TYPE_LIGHT -> {
+                    sensorLight = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
+                    if (sensorLight != null) {
+                        sensorLightTextView.visibility = View.VISIBLE // Pokaż wartość sensora światła
+                        sensorPressureTextView.visibility = View.GONE // Ukryj sensor ciśnienia
+                    } else {
+                        sensorLightTextView.text = getString(R.string.missing_sensor)
+                        sensorLightTextView.visibility = View.VISIBLE
+                        sensorPressureTextView.visibility = View.GONE
+                        sensorDetailsTextView.text = getString(R.string.sensor_not_configured) // Komunikat
+                    }
+                }
+                Sensor.TYPE_PRESSURE -> {
+                    sensorPressure = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE)
+                    if (sensorPressure != null) {
+                        sensorPressureTextView.visibility = View.VISIBLE // Pokaż wartość sensora ciśnienia
+                        sensorLightTextView.visibility = View.GONE // Ukryj sensor światła
+                    } else {
+                        sensorPressureTextView.text = getString(R.string.missing_sensor)
+                        sensorPressureTextView.visibility = View.VISIBLE
+                        sensorLightTextView.visibility = View.GONE
+                        sensorDetailsTextView.text = getString(R.string.sensor_not_configured) // Komunikat
+                    }
+                }
+                else -> {
+                    sensorLightTextView.visibility = View.GONE
+                    sensorPressureTextView.visibility = View.GONE
+                    sensorDetailsTextView.text = getString(R.string.sensor_not_configured) // Komunikat o braku sensora
+                }
             }
         } else {
-            sensorLightTextView.text = getString(R.string.missing_sensor)
+            sensorLightTextView.visibility = View.GONE
+            sensorPressureTextView.visibility = View.GONE
+            sensorDetailsTextView.text = getString(R.string.sensor_not_configured) // Komunikat o braku sensora
         }
     }
+
     fun onBackPressed(view: View) {
         finish()  // Kończy tę aktywność i wraca do poprzedniej
     }
 
-
     override fun onStart() {
         super.onStart()
-        if (sensorLight != null) {
-            // Rejestracja nasłuchiwacza, jeśli sensor jest dostępny
-            sensorManager.registerListener(this, sensorLight, SensorManager.SENSOR_DELAY_NORMAL)
+
+        // Rejestracja nasłuchiwaczy dla dostępnych sensorów
+        sensorLight?.let {
+            sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
+        }
+
+        sensorPressure?.let {
+            sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
         }
     }
 
@@ -74,9 +104,8 @@ class SensorDetailsActivity : AppCompatActivity(), SensorEventListener {
                 Sensor.TYPE_LIGHT -> {
                     sensorLightTextView.text = getString(R.string.light_sensor_label, currentValue)
                 }
-                Sensor.TYPE_PRESSURE ->
-                {
-                    sensorPressureTextView.text = getString(R.string.pressure_sensor_label,currentValue)
+                Sensor.TYPE_PRESSURE -> {
+                    sensorPressureTextView.text = getString(R.string.pressure_sensor_label, currentValue)
                 }
                 else -> {
                     // Obsługuje inne typy sensorów, jeśli są
@@ -88,5 +117,4 @@ class SensorDetailsActivity : AppCompatActivity(), SensorEventListener {
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
         // Możesz tu obsługiwać zmiany dokładności sensora, jeśli to konieczne
     }
-
 }
