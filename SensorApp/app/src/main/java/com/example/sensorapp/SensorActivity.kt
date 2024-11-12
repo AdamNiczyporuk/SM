@@ -21,19 +21,13 @@ class SensorActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.sensor_activity)
 
-        // Inicjalizacja RecyclerView i ustawienie LayoutManagera
         recyclerView = findViewById(R.id.sensor_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // Inicjalizacja SensorManager i pobranie listy wszystkich czujników
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         sensorList = sensorManager.getSensorList(Sensor.TYPE_ALL)
 
-        // Sprawdzenie i ustawienie adaptera dla RecyclerView
-        adapter = SensorAdapter(sensorList)
+        adapter = SensorAdapter(sensorList, this)  // Przekazujemy `this` jako kontekst
         recyclerView.adapter = adapter
-
-        // Notyfikacja adaptera o zmianie danych
-        adapter.notifyDataSetChanged()
     }
 }
