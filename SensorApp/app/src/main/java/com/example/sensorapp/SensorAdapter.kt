@@ -1,6 +1,8 @@
 package com.example.sensorapp
+import SensorDetailsActivity
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.hardware.Sensor
 import android.view.LayoutInflater
 import android.view.View
@@ -23,7 +25,19 @@ class SensorAdapter(
     override fun onBindViewHolder(holder: SensorViewHolder, position: Int) {
         val sensor = sensorList[position]
         holder.bind(sensor)
+
+        // Obsługa kliknięcia na czujnik
+        holder.itemView.setOnClickListener {
+            // Tworzenie intencji do przejścia do szczegółów sensora
+            val intent = Intent(context, SensorDetailsActivity::class.java)
+            // Przekazanie nazwy sensora i typu sensora jako dodatkowych danych
+            intent.putExtra("SENSOR_NAME", sensor.name)
+            intent.putExtra("SENSOR_TYPE", sensor.type)  // Dodajemy typ sensora
+            context.startActivity(intent)
+        }
     }
+
+
 
     override fun getItemCount() = sensorList.size
 
@@ -42,7 +56,6 @@ class SensorAdapter(
             }
         }
 
-        // Metoda do wyświetlania okna dialogowego z informacjami o czujniku
         private fun showSensorDetailsDialog(sensor: Sensor) {
             val builder = AlertDialog.Builder(context)
             builder.setTitle("Szczegóły czujnika")
@@ -53,5 +66,6 @@ class SensorAdapter(
             builder.setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
             builder.show()
         }
+
     }
 }
