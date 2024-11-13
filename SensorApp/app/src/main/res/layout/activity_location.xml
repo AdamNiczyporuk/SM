@@ -12,6 +12,13 @@
         android:text="Wciśnij przycisk, aby pobrać ostatnią lokalizację"
         android:layout_marginBottom="16dp"/>
 
+    <TextView
+        android:id="@+id/textview_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Location will be shown here"
+        android:textSize="18sp"
+        android:layout_marginTop="20dp" />
     <Button
         android:id="@+id/getLocationButton"
         android:layout_width="wrap_content"
