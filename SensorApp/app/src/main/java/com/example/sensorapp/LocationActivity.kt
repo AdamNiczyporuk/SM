@@ -15,18 +15,19 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.sensorapp.R
 import android.Manifest
-import android.health.connect.datatypes.ExerciseRoute.Location
 import android.widget.Toast
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import android.location.Location  // Correct import for the location class
 
 class LocationActivity : AppCompatActivity() {
 
-    private lateinit var lastLocation:Location
+    private var lastLocation: Location? = null  // Correct type here
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationTextView: TextView
-    private val REQUEST_LOCATION_PERMISSION  =1
+    private val REQUEST_LOCATION_PERMISSION = 1
     private val TAG = "LocationActivity"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_location) // Set the layout for this activity
@@ -34,29 +35,40 @@ class LocationActivity : AppCompatActivity() {
         locationTextView = findViewById(R.id.textview_location)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        val getLocationButton : Button = findViewById(R.id.getLocationButton)
-        getLocationButton.setOnClickListener{getLocation()}
-
+        val getLocationButton: Button = findViewById(R.id.getLocationButton)
+        getLocationButton.setOnClickListener { getLocation() }
     }
-    private fun getLocation()
-    {
+
+    private fun getLocation() {
+        // Check if permission is granted
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                REQUEST_LOCATION_PERMISSION
-            )
+            == PackageManager.PERMISSION_GRANTED) {
+
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location ->
+                    location?.let {
+                        lastLocation = it
+                        locationTextView.text = getString(
+                            R.string.location_text,
+                            it.latitude,
+                            it.longitude,
+                            it.time
+                        )
+                    } ?: run {
+                        locationTextView.setText(R.string.no_location)
+                    }
+                }
         } else {
-            Log.d(TAG, "getLocation: permissions granted")
-            // Implement location retrieval logic here
+            // Request permission if not granted
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                REQUEST_LOCATION_PERMISSION)
         }
     }
 
     fun onBackPressed(view: View) {
-        finish()  // Kończy tę aktywność i wraca do poprzedniej
+        finish()  // Finish this activity and return to the previous one
     }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -77,5 +89,4 @@ class LocationActivity : AppCompatActivity() {
             }
         }
     }
-
 }
