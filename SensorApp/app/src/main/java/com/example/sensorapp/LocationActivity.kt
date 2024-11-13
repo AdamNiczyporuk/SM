@@ -25,6 +25,7 @@ class LocationActivity : AppCompatActivity() {
     private var lastLocation: Location? = null  // Correct type here
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationTextView: TextView
+    private lateinit var addressTexView: TextView
     private val REQUEST_LOCATION_PERMISSION = 1
     private val TAG = "LocationActivity"
 
@@ -33,6 +34,7 @@ class LocationActivity : AppCompatActivity() {
         setContentView(R.layout.activity_location) // Set the layout for this activity
 
         locationTextView = findViewById(R.id.textview_location)
+        addressTexView = findViewById(R.id.textview_address)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         val getLocationButton: Button = findViewById(R.id.getLocationButton)
