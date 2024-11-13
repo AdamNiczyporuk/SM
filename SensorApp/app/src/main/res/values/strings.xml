@@ -8,5 +8,7 @@
     <string name="pressure_sensor_label">Pressure: %1$.2f hPa</string>
     <string name="pressure_sensor_available">Light Sensor is available</string>
     <string name="sensor_not_configured">Sensor is not configured</string>
+    <string name="location_permission_denied">Location permission denied</string>
+
 
 </resources>

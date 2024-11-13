@@ -27,24 +27,20 @@ class SensorAdapter(
 
         // Obsługa kliknięcia na czujnik
         holder.itemView.setOnClickListener {
-
-            if(sensor.type == Sensor.TYPE_MAGNETIC_FIELD)
-            {
-                val  intent = Intent(context,LocationActivity::class.java)
+            if (sensor.type == Sensor.TYPE_MAGNETIC_FIELD) {
+                // Przechodzenie do LocationActivity, jeśli kliknięto magnetometr
+                val intent = Intent(context, LocationActivity::class.java)
                 context.startActivity(intent)
-
-            }
-            else {
+            } else {
+                // Inaczej otwórz SensorDetailsActivity dla innych sensorów
                 val intent = Intent(context, SensorDetailsActivity::class.java)
-
                 intent.putExtra("SENSOR_NAME", sensor.name)
-                intent.putExtra("SENSOR_TYPE", sensor.type)  // Dodajemy typ sensora
+                intent.putExtra("SENSOR_TYPE", sensor.type)
                 context.startActivity(intent)
             }
-
-
         }
     }
+
 
 
 
