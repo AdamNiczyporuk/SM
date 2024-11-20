@@ -1,5 +1,7 @@
 package com.example.weatherproject.model
 
+import java.sql.Time
+
 data class WeatherResponse(
     val current: CurrentWeather
 )
