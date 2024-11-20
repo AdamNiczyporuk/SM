@@ -1,5 +1,6 @@
 package com.example.weatherproject.adapter
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +23,7 @@ class WeatherAdapter(private val data: List<Pair<String, String>>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = data[position]
         holder.keyTextView.text = "${item.first}: ${item.second}"
+        holder.keyTextView.setTextColor(Color.WHITE)
     }
 
     override fun getItemCount(): Int = data.size

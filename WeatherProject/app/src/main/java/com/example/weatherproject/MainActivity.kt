@@ -33,34 +33,39 @@ class MainActivity : AppCompatActivity() {
         weatherRecyclerView.layoutManager = LinearLayoutManager(this)
         weatherRecyclerView.adapter = WeatherAdapter(weatherData)
 
+
         fetchWeatherData(52.2297, 21.0122)
 
     }
-    private  fun fetchWeatherData(lat: Double, lon: Double) {
+    private fun fetchWeatherData(lat: Double, lon: Double) {
         val apiKey = "8152758392d21870cd6fa24bd3c9bdd2"
 
         RetrofitInstance.api.getWeather(lat, lon, apiKey).enqueue(object : Callback<WeatherResponse> {
             override fun onResponse(call: retrofit2.Call<WeatherResponse>, response: Response<WeatherResponse>) {
-                response.body()?.let { weather ->
-                    val temp = weather.current.temp
-                    temperatureTextView.text = "Temperatura: ${temp}°C"
+                if (response.isSuccessful) {
+                    response.body()?.let { weather ->
+                        val temp = weather.current.temp
+                        temperatureTextView.text = "Temperatura: ${temp}°C"
 
-                    val iconCode = weather.current.weather.firstOrNull()?.icon ?: "01d"
-                    val iconUrl = "https://openweathermap.org/img/wn/${iconCode}@2x.png"
-                    Glide.with(this@MainActivity).load(iconUrl).into(weatherIcon)
+                        val iconCode = weather.current.weather.firstOrNull()?.icon ?: "01d"
+                        val iconUrl = "https://openweathermap.org/img/wn/${iconCode}@2x.png"
+                        Glide.with(this@MainActivity).load(iconUrl).into(weatherIcon)
 
-                    weatherData.clear()
-                    weatherData.add("Odczuwalna" to "${weather.current.feels_like}°C")
-                    weatherData.add("Ciśnienie" to "${weather.current.pressure} hPa")
-                    weatherData.add("Wilgotność" to "${weather.current.humidity}%")
-                    weatherData.add("Wiatr" to "${weather.current.wind_speed} m/s")
-                    weatherData.add("Zachmurzenie" to "${weather.current.clouds}%")
-                    weatherRecyclerView.adapter?.notifyDataSetChanged()
+                        weatherData.clear()
+                        weatherData.add("Odczuwalna" to "${weather.current.feels_like}°C")
+                        weatherData.add("Ciśnienie" to "${weather.current.pressure} hPa")
+                        weatherData.add("Wilgotność" to "${weather.current.humidity}%")
+                        weatherData.add("Wiatr" to "${weather.current.wind_speed} m/s")
+                        weatherData.add("Zachmurzenie" to "${weather.current.clouds}%")
+                        weatherRecyclerView.adapter?.notifyDataSetChanged()
+                    }
+                } else {
+                    temperatureTextView.text = "Błąd: ${response.code()}"
                 }
             }
 
             override fun onFailure(call: retrofit2.Call<WeatherResponse>, t: Throwable) {
-                temperatureTextView.text = "Błąd pobierania danych"
+                temperatureTextView.text = "Błąd pobierania danych: ${t.message}"
             }
         })
     }
