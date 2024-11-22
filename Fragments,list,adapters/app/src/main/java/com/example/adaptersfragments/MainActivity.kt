@@ -1,20 +1,30 @@
 package com.example.adaptersfragments
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
+import com.example.adaptersfragments.R
 
 class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+
+        // Pobranie obiektu FragmentManager
+        val fragmentManager = supportFragmentManager
+
+        // Sprawdzanie, czy fragment już istnieje
+        var fragment = fragmentManager.findFragmentById(R.id.fragment_container)
+
+        if (fragment == null) {
+            // Jeśli fragment nie istnieje, tworzymy nowy
+            fragment = TaskFragment()
+
+            // Rozpoczynamy transakcję i dodajemy fragment
+            fragmentManager.beginTransaction()
+                .add(R.id.fragment_container, fragment)  // Dodajemy fragment do kontenera
+                .commit()  // Zatwierdzamy transakcję
         }
     }
 }

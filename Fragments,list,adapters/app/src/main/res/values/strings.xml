@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Adapters,Fragments</string>
+    <string name="name_hint">Wpisz nazwę zadania</string>
+    <string name="name_label">Nazwa</string>
+    <string name="details_label">Szczegóły</string>
+    <string name="done_label">Wykonane</string>
+    <string name="choose_date">Wybierz datę</string>
 </resources>
