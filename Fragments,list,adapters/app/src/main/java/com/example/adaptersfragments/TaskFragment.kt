@@ -9,60 +9,53 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.adaptersfragments.model.Task
 import java.util.Date
+import java.util.UUID
 
 class TaskFragment : Fragment() {
 
-    private lateinit var task: Task  // Tworzenie obiektu Task
-    private lateinit var nameField: EditText
-    private lateinit var dateButton: Button
+    private lateinit var task: Task
+    private lateinit var nameTextView: TextView
+    private lateinit var dateTextView: TextView
     private lateinit var doneCheckBox: CheckBox
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // Inicjalizacja obiektu Task
-        task = Task(name = "",  date = Date(System.currentTimeMillis()), done = false)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate widok fragment_task.xml
         val view = inflater.inflate(R.layout.fragment_task, container, false)
 
-        // Pobranie kontrolek z widoku
-        nameField = view.findViewById(R.id.task_name)
-        dateButton = view.findViewById(R.id.task_date)
+        // Find the views by ID
+        nameTextView = view.findViewById(R.id.task_name)
+        dateTextView = view.findViewById(R.id.task_date)
         doneCheckBox = view.findViewById(R.id.task_done)
 
-        // Obsługa pola tekstowego
-        nameField.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // Nie wymaga implementacji
-            }
+        // Retrieve the task ID passed from the previous fragment or activity
+        val taskId = arguments?.getSerializable(ARG_TASK_ID) as UUID
+        task = TaskStorage.instance.getTaskById(taskId) ?: throw IllegalArgumentException("Task not found")
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                task.name = s.toString() // Aktualizacja nazwy zadania
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                // Nie wymaga implementacji
-            }
-        })
-
-        // Ustawienie daty na przycisku
-        dateButton.text = task.date.toString()
-        dateButton.isEnabled = false // Przycisk jest nieaktywny
-
-        // Obsługa pola CheckBox
+        // Set the task data to the views
+        nameTextView.text = task.name
+        dateTextView.text = task.date.toString()
         doneCheckBox.isChecked = task.done
-        doneCheckBox.setOnCheckedChangeListener { _, isChecked ->
-            task.done = isChecked // Aktualizacja statusu zadania
-        }
 
         return view
+    }
+
+    companion object {
+        private const val ARG_TASK_ID = "task_id"
+
+        // Static method to create a new instance of TaskFragment with taskId
+        fun newInstance(taskId: UUID): TaskFragment {
+            val bundle = Bundle().apply {
+                putSerializable(ARG_TASK_ID, taskId)
+            }
+            return TaskFragment().apply {
+                arguments = bundle
+            }
+        }
     }
 }

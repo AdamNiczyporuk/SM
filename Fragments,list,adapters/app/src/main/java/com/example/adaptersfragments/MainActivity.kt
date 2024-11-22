@@ -4,27 +4,21 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.adaptersfragments.R
+import java.util.UUID
+
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        // Pobranie obiektu FragmentManager
-        val fragmentManager = supportFragmentManager
+        // Use the taskId from the Intent and create the TaskFragment
+        val taskId = intent.getSerializableExtra(TaskListFragment.KEY_EXTRA_TASK_ID) as UUID
+        val taskFragment = TaskFragment.newInstance(taskId)
 
-        // Sprawdzanie, czy fragment już istnieje
-        var fragment = fragmentManager.findFragmentById(R.id.fragment_container)
-
-        if (fragment == null) {
-            // Jeśli fragment nie istnieje, tworzymy nowy
-            fragment = TaskFragment()
-
-            // Rozpoczynamy transakcję i dodajemy fragment
-            fragmentManager.beginTransaction()
-                .add(R.id.fragment_container, fragment)  // Dodajemy fragment do kontenera
-                .commit()  // Zatwierdzamy transakcję
-        }
+        // Load the fragment into the activity
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, taskFragment)
+            .commit()
     }
 }
